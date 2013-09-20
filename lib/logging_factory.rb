@@ -1,18 +1,11 @@
-require 'load_path'
-
-LoadPath.configure do
-  add child_directory('logging_factory')
-
-  require 'version'
-  require 'preconditions'
-  require 'logging'
-end
+require 'version'
+require 'preconditions'
+require 'logging'
 
 #
 # This class that contains code for initializing logs.
-# Author: Nayyara Samuel (nayyara.samuel@opower.com)
+# @author: Nayyara Samuel (mailto: nayyara.samuel@opower.com)
 #
-
 # Patch so that certain checks can be gotten on a class using `include Preconditions`
 module Preconditions
   def self.included(receiver)
@@ -22,88 +15,94 @@ module Preconditions
 end
 
 # Logging factory for logs
-module Opower
+module LoggingFactory
+
   DEFAULT_LOG_CONFIGURATION = {
       output: 'STDOUT',
       truncate: false,
       level: :debug,
-      format: '[%d] %-5l %c: %m\n'
+      format: '[%d] %-5l [%c] %m\n'
   }
 
-  class LoggingFactory
+  # Create a new logging factory
+  def self.create(*params)
+    Logger.new(*params)
+  end
+
+  # Main logger class
+  class Logger
     include Preconditions
-    attr_accessor :log_configuration
+
+    attr_reader :log_configuration
 
     # Initializes this logger instance with teh format specified
     def initialize(config={})
-      final_config = DEFAULT_LOG_CONFIGURATION.merge(config)
-      @log_configuration = final_config
-    end
-
-    def log_configuration=(config)
-      final_config = DEFAULT_LOG_CONFIGURATION.merge(config)
-      @log_configuration = final_config
+      @log_configuration = DEFAULT_LOG_CONFIGURATION.merge(config)
     end
 
     # Returns a new log for the calling class with the supplied configuration
-    def log(caller)
+    def log(caller, config={})
+      log_configuration = @log_configuration.merge(config)
       log = Logging.logger[caller]
-      add_appenders(log)
+      add_appenders(log, log_configuration)
       log
     end
 
     private
-    def add_appenders(log)
-      destination = @log_configuration[:output]
-      truncate = @log_configuration[:truncate]
-      level = @log_configuration[:level].to_sym
+    def add_appenders(log, log_configuration)
+      destination = log_configuration[:output]
+      truncate = log_configuration[:truncate]
+      level = log_configuration[:level].to_sym
+      fmt = log_configuration[:format]
 
       if (destination == 'STDOUT')
-        append_stdout_format(log)
+        append_stdout_format(log, fmt)
       else
-        append_file_format(log, destination, truncate)
+        append_file_format(log, destination, fmt, truncate)
       end
 
+      valid_levels = [:debug, :error, :fatal, :warn, :info]
       check(level) do
-        satisfies("Logging level must be one of {debug, info, warn}") do
-          level == :debug || level == :info || level == :warn
+        satisfies("Logging level must be one of {#{valid_levels.join(',')}}") do
+          valid_levels.include?(level)
         end
       end
       log.level = level
       log
     end
 
-    def append_file_format(log, destination, truncate=false)
+    def append_file_format(log, destination, fmt, truncate=false)
       Logging.appenders.file(destination,
                              {
                                  file_name: destination,
                                  truncate: truncate ? true : false,
-                                 layout: Logging.layouts.pattern(
-                                     pattern: @log_configuration[:format]
-                                 )
-                             }
-      )
+                                 layout: Logging.layouts.pattern(pattern: fmt)
+                             })
       log.add_appenders(destination)
     end
 
-    def append_stdout_format(log)
+    def append_stdout_format(log, fmt)
       Logging.color_scheme('bright',
                            levels: {
-                               debug: :magenta, info: :green, warn: :yellow, error: :red, fatal: [:white, :on_red]
+                               debug: :magenta,
+                               info: :green,
+                               warn: :yellow,
+                               error: :red, fatal: [:white, :on_red]
                            },
-                           date: :blue, logger: :cyan
-      )
+                           date: :blue, logger: :cyan)
       Logging.appenders.stdout(
           'stdout',
           layout: Logging.layouts.pattern(
-              pattern: @log_configuration[:format],
-              color_scheme: 'bright'
-          )
-      )
+              pattern: fmt,
+              color_scheme: 'bright'))
       log.add_appenders 'stdout'
     end
   end
 
-  LOGGING_FACTORY = LoggingFactory.new
+  DEFAULT_FACTORY = LoggingFactory.create
 end
+
+
+
+
 
