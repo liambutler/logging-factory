@@ -16,6 +16,6 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(spec|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_dependency 'logging'
-  gem.add_dependency 'preconditions'
+  gem.add_dependency 'logging', '~> 1.8.1'
+  gem.add_dependency 'preconditions', '~> 0.3.0'
 end
