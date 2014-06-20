@@ -1,4 +1,5 @@
 # LoggingFactory
+[![Build Status](https://travis-ci.org/nayyara-samuel/logging_factory.svg?branch=v0.0.1)](https://travis-ci.org/nayyara-samuel/logging_factory)
 
 A wrapper around the [`logging` gem](https://github.com/TwP/logging) that makes instantiating logs easier. Also has a number of presets for file and standard output logging. 
 
@@ -27,7 +28,7 @@ By default all output is written to standard output. To use in your project:
 
 This will instantiate a log with the default configuration, specified by `LoggingFactory::DEFAULT_LOG_CONFIGURATION`:
 
-      {
+     {
          output: 'STDOUT',
          truncate: false,
          level: :debug,
