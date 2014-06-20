@@ -1,3 +1,13 @@
+# encoding: UTF-8
+require 'simplecov'
+
+SimpleCov.start do
+  add_filter 'spec/'
+  add_filter 'rdoc/'
+  add_filter 'results/'
+  add_filter 'coverage/'
+end
+
 require 'rspec'
 require 'rspec/mocks'
 require_relative '../lib/logging_factory'
@@ -8,7 +18,7 @@ class FileAccessor
 
   # Options should have a list of parts which will be appended together to give the base path
   def initialize(*options)
-    @base_path = File.join(options.map {|f| f.to_s})
+    @base_path = File.join(options.map { |f| f.to_s })
   end
 
   # Access specific file in the base path
@@ -22,7 +32,7 @@ class FileAccessor
   end
 
   # Delete all files in the directory
-  def delete_files(pattern='*.log')
+  def delete_files(pattern = '*.log')
     FileUtils.rm_rf Dir.glob(File.join(base_path, pattern))
   end
 end

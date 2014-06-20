@@ -1,0 +1,4 @@
+Style/MethodLength:
+  Enabled: false
+Style/LineLength:
+  Max: 180

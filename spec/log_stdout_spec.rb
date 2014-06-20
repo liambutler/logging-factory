@@ -1,4 +1,5 @@
-require 'spec_helper'
+# encoding: UTF-8
+require_relative './spec_helper'
 
 describe LoggingFactory::Logger do
 
@@ -34,5 +35,3 @@ describe LoggingFactory::Logger do
 
   end
 end
-
-
