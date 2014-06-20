@@ -1,5 +1,5 @@
 # LoggingFactory
-[![Build Status](https://travis-ci.org/nayyara-samuel/logging_factory.svg?branch=v0.0.1)](https://travis-ci.org/nayyara-samuel/logging_factory)
+[![Build Status](https://travis-ci.org/nayyara-samuel/logging-factory.svg?branch=master)](https://travis-ci.org/nayyara-samuel/logging-factory)
 
 A wrapper around the [`logging` gem](https://github.com/TwP/logging) that makes instantiating logs easier. Also has a number of presets for file and standard output logging. 
 
