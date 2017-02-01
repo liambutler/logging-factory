@@ -13,7 +13,7 @@ describe LoggingFactory::Logger do
     let(:warn_message) { 'This is a warn message' }
     let(:error_message) { 'This is an error message' }
     let(:fatal_message) { 'This is a fatal message' }
-    let(:time_regex) { /\[\d{4}(\-\d{2}){2} \d{2}(\:\d{2}){2}\]/ }
+    let(:time_regex) { /\[\d{4}(\-\d{2}){2}T\d{2}(\:\d{2}){2}\]/ }
 
     before do
       log.debug(debug_message)

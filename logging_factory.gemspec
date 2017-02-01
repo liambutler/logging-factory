@@ -22,6 +22,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rubocop', '~> 0.23.0'
   gem.add_development_dependency 'simplecov', '~> 0.6.4'
 
-  gem.add_dependency 'logging', '~> 1.8.1'
+  gem.add_dependency 'logging', '~> 2.0.0'
   gem.add_dependency 'preconditions', '~> 0.3.0'
 end
